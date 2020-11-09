@@ -1,0 +1,59 @@
+"""
+Un gráfico o grafo es una representación gráfica de un conjunto de objetos donde algunos pares de objetos están conectados por enlaces. 
+os objetos interconectados están representados por puntos denominados vértices, y los enlaces que conectan los vértices se 
+llaman bordes. 
+
+Las siguientes son las operaciones básicas que realizamos en los gráficos.
+
+     Mostrar vértices de gráfico
+     Mostrar bordes del gráfico
+     Agregar un vértice
+     Agregar un borde
+     Crear un gráfico
+
+
+
+Se puede presentar fácilmente un gráfico utilizando los tipos de datos del diccionario python. 
+Representamos los vértices como las claves del diccionario y la conexión entre los vértices también
+ llamados bordes como los valores en el diccionario.
+
+"""
+
+# Create the dictionary with graph elements
+graph = { "a" : ["b","c"],
+          "b" : ["a", "d"],
+          "c" : ["a", "d"],
+          "d" : ["e"],
+          "e" : ["d"]
+         }
+
+# Print the graph 		 
+print(graph)
+
+# Mostrar vértices de gráfico:
+
+"""
+Para mostrar los vértices del gráfico, simplemente buscamos las claves del diccionario de gráficos. Usamos el método keys ().
+"""
+class graph:
+    def __init__(self,gdict=None):
+        if gdict is None:
+            gdict = []
+        self.gdict = gdict
+
+# Get the keys of the dictionary
+    def getVertices(self):
+        return list(self.gdict.keys())
+
+# Create the dictionary with graph elements
+graph_elements = { "a" : ["b","c"],
+                "b" : ["a", "d"],
+                "c" : ["a", "d"],
+                "d" : ["e"],
+                "e" : ["d"]
+                }
+
+g = graph(graph_elements)
+
+print(g.getVertices())
+
