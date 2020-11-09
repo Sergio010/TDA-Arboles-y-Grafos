@@ -1,0 +1,148 @@
+import sys
+
+class Nodo(object):
+	izquierda = None
+	derecha = None
+	altura = 0
+	dato = 0
+
+	def __init__(self, dato):
+		self.dato = dato
+		self.altura = 1
+
+class ArbolAVL(object):
+	def insertar_dato(self, raiz, dato):
+		if not raiz:
+			return Nodo(dato)
+		elif dato < raiz.dato:
+			raiz.izquierda = self.insertar_dato(raiz.izquierda, dato)
+		else:
+			raiz.derecha = self.insertar_dato(raiz.derecha, dato)
+
+		raiz.altura = 1 + max(self.obtenerAltura(raiz.izquierda), self.obtenerAltura(raiz.derecha))
+		balance = self.obtenerBalance(raiz)
+
+		if balance > 1:
+			if dato < raiz.izquierda.dato:
+				return self.rotacionDerecha(raiz)
+			else:
+				raiz.izquierda = self.rotacionIzquierda(raiz.izquierda)
+				return self.rotacionDerecha(raiz)
+
+
+		if balance < -1:
+			if dato > raiz.derecha.dato:
+				return self.rotacionIzquierda(raiz)
+			else:
+				raiz.derecha = self.rotacionDerecha(raiz.derecha)
+				return self.rotacionIzquierda(raiz)
+		return raiz
+
+	def rotacionIzquierda(self, raiz):
+		a = raiz.derecha
+		b = a.izquierda
+		a.izquierda = raiz
+		raiz.derecha = b
+		raiz.altura = 1 + max(self.obtenerAltura(raiz.izquierda), self.obtenerAltura(raiz.derecha))
+		a.altura = 1 + max(self.obtenerAltura(a.izquierda), self.obtenerAltura(a.derecha))
+		return a
+
+	def rotacionDerecha(self, raiz):
+		a = raiz.izquierda
+		b = a.derecha
+		a.derecha = raiz
+		raiz.izquierda = b
+		raiz.altura = 1 + max(self.obtenerAltura(raiz.izquierda), self.obtenerAltura(raiz.derecha))
+		a.altura = 1 + max(self.obtenerAltura(a.izquierda), self.obtenerAltura(a.derecha))
+
+		return a
+
+	def preorden(self, raiz):
+		if raiz is not None:
+			print(raiz.dato)
+			self.preorden(raiz.izquierda)
+			self.preorden(raiz.derecha)
+
+	def inorden(self, raiz):
+		if raiz is not None:
+			self.inorden(raiz.izquierda)
+			print(raiz.dato)
+			self.inorden(raiz.derecha)
+			
+	def postorden(self, raiz):
+		if raiz is not None:
+			self.postorden(raiz.izquierda)
+			self.postorden(raiz.derecha)
+			print(raiz.dato)
+
+	def busqueda_dato(self, raiz, dato):
+		if raiz is not None:
+			if raiz.dato == dato:
+				return True
+			elif dato < raiz.dato:
+				return self.busqueda_dato(raiz.izquierda, dato)
+			else:
+				return self.busqueda_dato(raiz.derecha, dato)
+		else:
+			False
+
+	def obtenerMaximo(self,raiz):
+		if not raiz.derecha:
+			return raiz.dato
+		else:
+			return self.obtenerMaximo(raiz.derecha)
+	
+	def obtenerMinimo(self,raiz):
+		if not raiz.izquierda:
+			return raiz.dato
+		else:
+			return self.obtenerMinimo(raiz.izquierda)
+			
+	def obtenerAltura(self,raiz):
+		if not raiz:
+			return 0
+		return raiz.altura
+
+	def obtenerBalance(self,raiz):
+		if not raiz:
+			return 0
+		return self.obtenerAltura(raiz.izquierda) - self.obtenerAltura(raiz.derecha)
+
+	def imprimir(self, raiz, indentacion, ultimo):
+		if raiz is not None:
+			sys.stdout.write(indentacion)
+			if ultimo:
+				sys.stdout.write("D----")
+				indentacion += "     "
+			else:
+				sys.stdout.write("I----")
+				indentacion +="|     "
+			print(raiz.dato)
+			self.imprimir(raiz.izquierda, indentacion, False)
+			self.imprimir(raiz.derecha, indentacion, True)
+
+
+
+
+if __name__ == '__main__':
+	arbol = ArbolAVL()
+	raiz = None
+	raiz = arbol.insertar_dato(raiz, 3)
+	raiz = arbol.insertar_dato(raiz, 10)
+	raiz = arbol.insertar_dato(raiz, 1)
+	raiz = arbol.insertar_dato(raiz, 6)
+	raiz = arbol.insertar_dato(raiz, 14)
+	raiz = arbol.insertar_dato(raiz, 4)
+	raiz = arbol.insertar_dato(raiz, 7)
+	raiz = arbol.insertar_dato(raiz, 13)
+	arbol.preorden(raiz)
+	print()
+	arbol.inorden(raiz)
+	print()
+	arbol.postorden(raiz)
+	print()
+	print(arbol.obtenerMaximo(raiz))
+	print()
+	print(arbol.obtenerMinimo(raiz))
+	print()
+	arbol.imprimir(raiz, "", True)
