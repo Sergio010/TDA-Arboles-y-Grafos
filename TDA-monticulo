@@ -1,0 +1,24 @@
+"""
+Insertar en el montón
+
+Insertar un elemento de datos en un montón siempre agrega el elemento en el último índice. Pero puede aplicar la 
+función heapify nuevamente para llevar el elemento recién agregado al primer índice solo si tiene el valor más pequeño. 
+En el siguiente ejemplo, insertamos el número 8.
+
+"""
+import heapq
+H = [21,1,45,78,3,5]
+# Covert to a heap
+heapq.heapify(H)
+print(H)
+# Add element
+heapq.heappush(H,8)
+print(H)
+
+# Remove element from the heap
+heapq.heappop(H)
+heapq.heappop(H)
+
+# Replace an element
+heapq.heapreplace(H,6)
+print(H)
