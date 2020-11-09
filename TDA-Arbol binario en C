@@ -1,0 +1,131 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+/*Un árbol binario tiene un nodo raíz que tiene dos elementos a los que llamamos izquierda y derecha. 
+Cada elemento es a su vez otro nodo que puede tener izquierda y derecha, infinitamente.
+*/
+
+//Veamos cómo crear un nodo u hoja. Tenemos el struct del nodo que es así:
+
+struct Nodo {
+    int dato;
+    struct Nodo *izquierda;
+    struct Nodo *derecha;
+};
+
+/*Tiene un dato, que será el verdadero dato que tiene. Aquí puede haber una cadena, un flotante, etcétera.
+ Además, tiene dos apuntadores a un struct del mismo tipo que es izquierda y derecha.
+
+*/
+
+//Para crear un nodo del árbol binario en C tenemos la siguiente función ayudante:
+
+struct Nodo *nuevoNodo(int dato) {
+    // Solicitar memoria
+    size_t tamanioNodo = sizeof(struct Nodo);
+    struct Nodo *nodo = (struct Nodo *) malloc(tamanioNodo);
+    // Asignar el dato e iniciar hojas
+    nodo->dato = dato;
+    nodo->izquierda = nodo->derecha = NULL;
+    return nodo;
+}
+/*Lo que hace es alojar memoria (con malloc memory allocation) para el nuevo nodo y regresar el apuntador. 
+Estamos casteando el apuntador a un Nodo en la línea 4. Después, en la línea 6 y 7 iniciamos los datos del nodo.
+
+INSERTAR DATOS
+vamos a insertar los elementos de tal forma que los menores queden a la izquierda de la raíz y los mayores a la derecha.
+
+
+En caso de que el nodo en donde vayamos a insertar ya esté ocupado, intentamos insertarlo en un nodo hijo. 
+Y si ese hijo está ocupado, entonces vamos a más profundidad. Esto se logra con recursión / recursividad.
+*/
+
+void insertar(struct Nodo *nodo, int dato) {
+    // ¿Izquierda o derecha?
+    // Si es mayor va a la derecha
+    if (dato > nodo->dato) {
+        // Tienes espacio a la derecha?
+        if (nodo->derecha == NULL) {
+            nodo->derecha = nuevoNodo(dato);
+        } else {
+            // Si la derecha ya está ocupada, recursividad ;)
+            insertar(nodo->derecha, dato);
+        }
+    } else {
+        // Si no, a la izquierda
+        if (nodo->izquierda == NULL) {
+            nodo->izquierda = nuevoNodo(dato);
+        } else {
+            // Si la izquierda ya está ocupada, recursividad ;)
+            insertar(nodo->izquierda, dato);
+        }
+    }
+}
+
+/*El primer if es el que indica si lo insertamos a la izquierda o derecha. Después comprobamos si está disponible 
+(línea 6 y 14, en caso de que sí, alojamos un nuevo nodo.
+
+Si no, invocamos a la función dentro de sí misma (recursión) pero le pasamos el nodo a la derecha o izquierda, eso es en la línea 10 y 18.
+
+Como puedes notar, entre mayor sea el árbol, la inserción será un poco más lenta, pero es un sacrificio que se hace para poder buscar y 
+recorrer en menor tiempo.
+
+
+*/
+
+//En este caso se recorre la raíz, luego la izquierda y finalmente la derecha. Queda así:
+
+void preorden(struct Nodo *nodo) {
+    if (nodo != NULL) {
+        printf("%d,", nodo->dato);
+        preorden(nodo->izquierda);
+        preorden(nodo->derecha);
+    }
+}
+//De este modo el primer elemento será la raíz y después todas las izquierdas. Finalmente todas las derechas.
+
+
+/*tenemos los datos ordenados de forma ascendente al recorrerlo de esta forma. Esto es debido a que primero recorremos la izquierda,
+ luego la raíz y finalmente la derecha.*/
+ 
+void inorden(struct Nodo *nodo) {
+    if (nodo != NULL) {
+        inorden(nodo->izquierda);
+        printf("%d,", nodo->dato);
+        inorden(nodo->derecha);
+    }
+}
+
+//Esta es una de las ventajas de los árboles binarios, pues los datos ya están acomodados al insertarlos, así que ya no tenemos que usar un algoritmo de ordenamiento más tarde.
+
+void postorden(struct Nodo *nodo) {
+    if (nodo != NULL) {
+        postorden(nodo->izquierda);
+        postorden(nodo->derecha);
+        printf("%d,", nodo->dato);
+    }
+}
+// primero visitamos la izquierda, después la derecha, y finalmente la raíz.
+
+//Para usarlo solo tienes que crear un nodo que será la raíz y después invocar al método insertar. No te preocupes, la función se encargará de acomodarlo.
+
+int main() {
+    struct Nodo *raiz = nuevoNodo(28);
+    insertar(raiz, 11);
+    insertar(raiz, 96);
+    insertar(raiz, 21);
+    insertar(raiz, 6);
+    insertar(raiz, 97);
+    insertar(raiz, 1);
+    insertar(raiz, 30);
+    insertar(raiz, 10);
+    insertar(raiz, 2);
+    printf("\nImprimiendo preorden\n");
+    preorden(raiz);
+    printf("\nImprimiendo inorden\n");
+    inorden(raiz);
+    printf("\nImprimiendo postorden\n");
+    postorden(raiz);
+}
+
+
