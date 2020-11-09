@@ -1,0 +1,123 @@
+#include<stdio.h>
+#include<conio.h>
+#include<stdlib.h>
+//La declaración del nodo es:
+struct nodo{b//Hay dos punteros, uno que apunta al subárbol izquierdo y otro que apunta al subárbol derecho.
+	int info;
+	struct nodo *izq;
+	struct nodo *der;	
+};
+
+/*En la función insertar creamos un nodo y disponemos los punteros izq y der a NULL, guardamos la información que 
+llega en el nodo creado.
+Si el árbol está vacío, apuntamos raíz al nodo creado; en caso de no estar vacío, dentro de una estructura 
+repetitiva vamos comparando x con la información del nodo, si x es mayor a la del nodo descendemos por el 
+subárbol derecho en caso contrario descendemos por el subárbol izquierdo.
+Cuando se encuentra un subárbol vacío insertar el nodo en dicho subárbol. Para esto llevamos un puntero 
+anterior dentro del while:*/
+
+struct nodo *raiz = NULL;
+
+void insertar(int x){
+	struct nodo *nuevo;
+	nuevo = malloc(sizeof(struct nodo));
+	nuevo->info = x;
+	nuevo->izq = NULL;
+	nuevo->der = NULL;
+	if(raiz == NULL){
+		raiz = nuevo;
+	}
+	else{
+		struct nodo *anterior, *reco;
+		anterior = NULL;
+		reco = raiz;
+		while(reco != NULL){
+			anterior = reco;
+			if(x < reco->info){
+				reco = reco->izq;
+			}else{
+				reco = reco->der;
+			}
+		}
+		if( x < anterior->info){
+			anterior->izq = nuevo;
+		}
+		else{
+			anterior->der = nuevo;
+		}
+	}
+	
+}
+
+//La funcióno imprimirPre recibe como parámetro la dirección del nodo a visitar (desde la main le enviamos raiz): 
+void imprimirPre(struct nodo *reco){
+	if(reco != NULL){
+		printf("%i-",reco->info);
+		imprimirPre(reco->izq);
+		imprimirPre(reco->der);
+	}
+}
+/*La función es recursiva, lo primero que verifica con un if si reco está apuntando a un nodo 
+(esto es verdad si reco es distinto a NULL), en caso afirmativo ingresa al bloque del if y realiza:
+
+     - Visitar la raiz.
+     - Recorrer el subárbol izquierdo en pre-orden.
+     - Recorrer el subárbol derecho en pre-orden.
+
+La visita en este caso es la impresión de la información del nodo y los recorridos son las llamadas 
+recursivas pasando las direcciones de los subárboles izquierdo y derecho.
+
+Los algoritmos de los recorridos en entreorden y postorden son similares. La diferencia es que la visita la 
+realizamos entre las llamadas recursivas en el recorrido en entre orden:*/
+
+
+void imprimirEntre(struct nodo *reco){
+	if(reco != NULL){
+		imprimirEntre(reco->izq);
+		printf("%i-",reco->info);
+		imprimirEntre(reco->der);
+	}
+}
+
+//y por último en el recorrido en postorden la visita la realizamos luego de las dos llamadas recursivas:
+void imprimirPost(struct nodo *reco){
+	if(reco != NULL){
+		imprimirPost(reco->izq);
+		imprimirPost(reco->der);
+		printf("%i-",reco->info);
+	}
+}
+
+//En la función borrar debemos eliminar todos los nodos que quedan en el árbol, para esto debemos 
+//recorrer el árbol en post orden y en la visita eliminar el nodo:
+
+void borrar(struct nodo *reco){
+	if(reco != NULL){
+		borrar(reco->izq);
+		borrar(reco->der);
+		free(reco);
+	}
+}
+
+int main(){
+	
+	insertar(100);
+	insertar(50);
+	insertar(25);
+	insertar(75);
+	insertar(150);
+	
+	printf("Impresion preorden:");
+	imprimirPre(raiz);
+	printf("\n\n");
+	printf("Impresion entreorden:");
+	imprimirEntre(raiz);
+	printf("\n\n");
+	printf("Impresion postorden:");
+	imprimirPost(raiz);
+	borrar(raiz);
+	
+	getch();
+	return 0;
+	
+}
