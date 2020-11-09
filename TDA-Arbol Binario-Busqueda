@@ -1,0 +1,76 @@
+"""
+
+Un árbol de búsqueda binaria (BST) es un árbol en el que todos los nodos siguen las propiedades mencionadas a continuación: 
+el subárbol izquierdo de un nodo tiene una clave menor o igual que la clave de su nodo principal. 
+El subárbol derecho de un nodo tiene una clave mayor que la clave de su nodo padre. Por lo tanto, 
+BST divide todos sus subárboles en dos segmentos; el subárbol izquierdo y el subárbol derecho y se pueden definir 
+como 
+
+			left_subtree (claves) ≤ nodo (clave) ≤ right_subtree (claves)
+		->	subarbol_izquierdo (claves) ≤ nodo (clave) ≤ subarbol_derecho (claves)
+
+
+
+Busqueda de un valor en Arbol Binario
+
+La búsqueda de un valor en un árbol implica comparar el valor entrante con el valor que sale de los nodos. 
+Aquí también atravesamos los nodos de izquierda a derecha y finalmente con el padre. Si el valor buscado 
+no coincide con ninguno de los valores de salida, entonces devolvemos el mensaje no encontrado; de lo contrario, 
+se devuelve el mensaje encontrado.
+
+"""
+class Node:
+
+    def __init__(self, data):
+
+        self.left = None
+        self.right = None
+        self.data = data
+
+# Insert method to create nodes
+    def insert(self, data):
+
+        if self.data:
+            if data < self.data:
+                if self.left is None:
+                    self.left = Node(data)
+                else:
+                    self.left.insert(data)
+            elif data > self.data:
+                if self.right is None:
+                    self.right = Node(data)
+                else:
+                    self.right.insert(data)
+        else:
+            self.data = data
+
+# findval method to compare the value with nodes
+    def busqueda(self, dato):
+        if dato < self.data:
+            if self.left is None:
+                return str(dato)+ "No ha sido encontrado"
+            return self.left.busqueda(dato)
+        elif dato > self.data:
+            if self.right is None:
+                return str(dato)+ "No ha sido encontrado"
+            return self.right.busqueda(dato)
+        else:
+            print(str(self.data) + 'Ha sido encontrado')
+
+
+# Print the tree
+    def ImprimeArbol(self):
+        if self.left:
+            self.left.ImprimeArbol()
+        print( self.data),
+        if self.right:
+            self.right.ImprimeArbol()
+
+if __name__ == '__main__':
+	root = Node(12)
+	root.insert(6)
+	root.insert(14)
+	root.insert(3)
+	print(root.findval(7))
+	print(root.findval(14))
+	print(root.findval(6))
